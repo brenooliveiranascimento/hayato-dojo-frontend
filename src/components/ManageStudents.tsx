@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -27,6 +28,8 @@ import {
   LogOut,
 } from "lucide-react";
 import { useAuthStore } from "../store/auth.store";
+import { toast } from "react-toastify";
+import categoriesDocx from "../assets/II-CAMPEONATO-JESUINO-COUTINHO-categorias.docx";
 
 export type Student = {
   id: number;
@@ -56,6 +59,7 @@ export default function ManageStudents() {
   );
   const [deletingStudent, setDeletingStudent] = useState<number | null>(null);
   const { logout, dojo } = useAuthStore();
+
   const {
     data: students,
     isLoading: qLoading,
@@ -78,6 +82,9 @@ export default function ManageStudents() {
     );
   };
 
+  const openCategoriesDoc = () => {
+    window.open(categoriesDocx, "_blank");
+  };
   const createMutation = useMutation({
     onSuccess: () => {
       setIsLoading(false);
@@ -90,7 +97,8 @@ export default function ManageStudents() {
       setIsLoading(true);
       return createStudent(student);
     },
-    onError: () => {
+    onError: (error: any) => {
+      toast.error(error.response.data.error);
       setIsLoading(false);
     },
   });
@@ -112,6 +120,9 @@ export default function ManageStudents() {
         categoria: student.categoria,
         dan: student.dan,
       }),
+    onError: (error: any) => {
+      toast.error(error.response.data.error);
+    },
   });
 
   const deleteMutation = useMutation({
@@ -148,6 +159,8 @@ export default function ManageStudents() {
       deleteMutation.mutate(studentId);
     }
   };
+
+  const maxNameLength = 15; // define limite de caracteres
 
   const getCategoryColor = (categoria: number) => {
     switch (categoria) {
@@ -188,13 +201,21 @@ export default function ManageStudents() {
     }));
   };
 
+  const handleLogout = () => {
+    queryClient.invalidateQueries();
+
+    queryClient.clear();
+
+    logout();
+  };
+
   if (qLoading) return <p>Carregando alunos...</p>;
   if (qError) return <p>Erro ao carregar alunos</p>;
 
   return (
     <>
       <header className="bg-white shadow-lg border-b border-red-100 relative">
-        <div className="max-w-6xl mx-auto px-4 py-4">
+        <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <img
@@ -211,7 +232,7 @@ export default function ManageStudents() {
             </div>
 
             <button
-              onClick={logout}
+              onClick={handleLogout}
               className="cursor-pointer flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors shadow-md hover:shadow-lg"
             >
               <LogOut className="h-4 w-4" />
@@ -221,7 +242,7 @@ export default function ManageStudents() {
         </div>
       </header>
       <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-100 p-4 pt-8">
-        <div className="max-w-6xl mx-auto space-y-8">
+        <div className="max-w-7xl mx-auto space-y-8">
           <div className="text-center">
             <div className="mx-auto mb-6">
               <img
@@ -302,194 +323,212 @@ export default function ManageStudents() {
                           </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                          {filteredStudents?.map((student) => (
-                            <tr key={student.id} className="hover:bg-gray-50">
-                              <td className="px-4 py-4 whitespace-nowrap">
-                                <div className="flex items-center">
-                                  <div className="bg-red-100 p-2 rounded-full mr-3">
-                                    <User className="h-4 w-4 text-red-600" />
+                          {filteredStudents?.map((student) => {
+                            const displayName =
+                              student.nome.length > maxNameLength
+                                ? student.nome.slice(0, maxNameLength) + "..."
+                                : student.nome;
+
+                            return (
+                              <tr key={student.id} className="hover:bg-gray-50">
+                                <td className="px-4 py-4 whitespace-nowrap">
+                                  <div className="flex items-center">
+                                    <div className="bg-red-100 p-2 rounded-full mr-3">
+                                      <User className="h-4 w-4 text-red-600" />
+                                    </div>
+                                    <div className="text-sm font-medium text-gray-900">
+                                      {editingStudent?.id === student.id ? (
+                                        <input
+                                          type="text"
+                                          value={editingStudent.nome}
+                                          onChange={(e) =>
+                                            setEditingStudent({
+                                              ...editingStudent,
+                                              nome: e.target.value,
+                                            })
+                                          }
+                                          className="text-sm border border-gray-300 rounded px-2 py-1 w-full"
+                                        />
+                                      ) : (
+                                        <>{displayName}</>
+                                      )}
+                                    </div>
                                   </div>
-                                  <div className="text-sm font-medium text-gray-900">
+                                </td>
+                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                                  {editingStudent?.id === student.id ? (
+                                    <input
+                                      type="number"
+                                      value={editingStudent.idade}
+                                      onChange={(e) =>
+                                        setEditingStudent({
+                                          ...editingStudent,
+                                          idade: parseInt(e.target.value) || 0,
+                                        })
+                                      }
+                                      className="text-sm border border-gray-300 rounded px-2 py-1 w-16"
+                                    />
+                                  ) : (
+                                    `${student.idade} anos`
+                                  )}
+                                </td>
+                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                                  {editingStudent?.id === student.id ? (
+                                    <input
+                                      type="text"
+                                      value={editingStudent.peso}
+                                      onChange={(e) =>
+                                        setEditingStudent({
+                                          ...editingStudent,
+                                          peso: e.target.value,
+                                        })
+                                      }
+                                      className="text-sm border border-gray-300 rounded px-2 py-1 w-20"
+                                    />
+                                  ) : (
+                                    student.peso
+                                  )}
+                                </td>
+                                <td className="px-4 py-4 whitespace-nowrap">
+                                  {editingStudent?.id === student.id ? (
+                                    <input
+                                      type="text"
+                                      value={editingStudent.kyu}
+                                      disabled={Boolean(editingStudent.dan)}
+                                      placeholder={
+                                        editingStudent.dan ? "-----" : "Dan"
+                                      }
+                                      onChange={(e) =>
+                                        setEditingStudent({
+                                          ...editingStudent,
+                                          kyu: e.target.value,
+                                        })
+                                      }
+                                      className="text-sm border border-gray-300 rounded px-2 py-1 w-20"
+                                    />
+                                  ) : student.kyu ? (
+                                    <span
+                                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                        student.kyu && getKyuColor(student.kyu)
+                                      }`}
+                                    >
+                                      {student.kyu}
+                                    </span>
+                                  ) : (
+                                    <span className="text-gray-400 text-sm">
+                                      -
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="px-4 py-4 whitespace-nowrap">
+                                  {editingStudent?.id === student.id ? (
+                                    <input
+                                      type="number"
+                                      value={editingStudent.dan || ""}
+                                      disabled={Boolean(editingStudent.kyu)}
+                                      placeholder={
+                                        editingStudent.kyu ? "-----" : "Kyu"
+                                      }
+                                      onChange={(e) =>
+                                        setEditingStudent({
+                                          ...editingStudent,
+                                          dan:
+                                            parseInt(e.target.value) ||
+                                            undefined,
+                                        })
+                                      }
+                                      className="text-sm border border-gray-300 rounded px-2 py-1 w-16"
+                                    />
+                                  ) : student.dan ? (
+                                    <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-black text-white">
+                                      {student.dan}
+                                    </span>
+                                  ) : (
+                                    <span className="text-gray-400 text-sm">
+                                      -
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="px-4 py-4 whitespace-nowrap">
+                                  {editingStudent?.id === student.id ? (
+                                    <input
+                                      type="number"
+                                      value={editingStudent.categoria}
+                                      onChange={(e) =>
+                                        setEditingStudent({
+                                          ...editingStudent,
+                                          categoria:
+                                            parseInt(e.target.value) || 0,
+                                        })
+                                      }
+                                      className="text-sm border border-gray-300 rounded px-2 py-1 w-16"
+                                    />
+                                  ) : (
+                                    <span
+                                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getCategoryColor(
+                                        student.categoria
+                                      )}`}
+                                    >
+                                      Cat. {student.categoria}
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="px-4 py-4 whitespace-nowrap">
+                                  <div className="flex items-center space-x-2">
                                     {editingStudent?.id === student.id ? (
-                                      <input
-                                        type="text"
-                                        value={editingStudent.nome}
-                                        onChange={(e) =>
-                                          setEditingStudent({
-                                            ...editingStudent,
-                                            nome: e.target.value,
-                                          })
-                                        }
-                                        className="text-sm border border-gray-300 rounded px-2 py-1 w-full"
-                                      />
+                                      <>
+                                        <button
+                                          onClick={handleSaveEdit}
+                                          disabled={updateMutation.isPending}
+                                          className="p-2 text-green-600 hover:text-green-800 hover:bg-green-50 rounded-full transition-colors disabled:opacity-50"
+                                          title="Salvar alterações"
+                                        >
+                                          {updateMutation.isPending ? (
+                                            <Loader2 className="h-4 w-4 animate-spin" />
+                                          ) : (
+                                            <Save className="h-4 w-4" />
+                                          )}
+                                        </button>
+                                        <button
+                                          onClick={handleCancelEdit}
+                                          className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-full transition-colors"
+                                          title="Cancelar edição"
+                                        >
+                                          <X className="h-4 w-4" />
+                                        </button>
+                                      </>
                                     ) : (
-                                      student.nome
+                                      <>
+                                        <button
+                                          onClick={() => handleEdit(student)}
+                                          className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-full transition-colors"
+                                          title="Editar atleta"
+                                        >
+                                          <Edit2 className="h-4 w-4" />
+                                        </button>
+                                        <button
+                                          onClick={() =>
+                                            handleDelete(student.id)
+                                          }
+                                          disabled={
+                                            deletingStudent === student.id
+                                          }
+                                          className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-full transition-colors disabled:opacity-50"
+                                          title="Excluir atleta"
+                                        >
+                                          {deletingStudent === student.id ? (
+                                            <Loader2 className="h-4 w-4 animate-spin" />
+                                          ) : (
+                                            <Trash2 className="h-4 w-4" />
+                                          )}
+                                        </button>
+                                      </>
                                     )}
                                   </div>
-                                </div>
-                              </td>
-                              <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {editingStudent?.id === student.id ? (
-                                  <input
-                                    type="number"
-                                    value={editingStudent.idade}
-                                    onChange={(e) =>
-                                      setEditingStudent({
-                                        ...editingStudent,
-                                        idade: parseInt(e.target.value) || 0,
-                                      })
-                                    }
-                                    className="text-sm border border-gray-300 rounded px-2 py-1 w-16"
-                                  />
-                                ) : (
-                                  `${student.idade} anos`
-                                )}
-                              </td>
-                              <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {editingStudent?.id === student.id ? (
-                                  <input
-                                    type="text"
-                                    value={editingStudent.peso}
-                                    onChange={(e) =>
-                                      setEditingStudent({
-                                        ...editingStudent,
-                                        peso: e.target.value,
-                                      })
-                                    }
-                                    className="text-sm border border-gray-300 rounded px-2 py-1 w-20"
-                                  />
-                                ) : (
-                                  student.peso
-                                )}
-                              </td>
-                              <td className="px-4 py-4 whitespace-nowrap">
-                                {editingStudent?.id === student.id ? (
-                                  <input
-                                    type="text"
-                                    value={editingStudent.kyu}
-                                    onChange={(e) =>
-                                      setEditingStudent({
-                                        ...editingStudent,
-                                        kyu: e.target.value,
-                                      })
-                                    }
-                                    className="text-sm border border-gray-300 rounded px-2 py-1 w-20"
-                                  />
-                                ) : student.kyu ? (
-                                  <span
-                                    className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                                      student.kyu && getKyuColor(student.kyu)
-                                    }`}
-                                  >
-                                    {student.kyu}
-                                  </span>
-                                ) : (
-                                  <span className="text-gray-400 text-sm">
-                                    -
-                                  </span>
-                                )}
-                              </td>
-                              <td className="px-4 py-4 whitespace-nowrap">
-                                {editingStudent?.id === student.id ? (
-                                  <input
-                                    type="number"
-                                    value={editingStudent.dan || ""}
-                                    onChange={(e) =>
-                                      setEditingStudent({
-                                        ...editingStudent,
-                                        dan:
-                                          parseInt(e.target.value) || undefined,
-                                      })
-                                    }
-                                    className="text-sm border border-gray-300 rounded px-2 py-1 w-16"
-                                  />
-                                ) : student.dan ? (
-                                  <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-black text-white">
-                                    {student.dan}
-                                  </span>
-                                ) : (
-                                  <span className="text-gray-400 text-sm">
-                                    -
-                                  </span>
-                                )}
-                              </td>
-                              <td className="px-4 py-4 whitespace-nowrap">
-                                {editingStudent?.id === student.id ? (
-                                  <input
-                                    type="number"
-                                    value={editingStudent.categoria}
-                                    onChange={(e) =>
-                                      setEditingStudent({
-                                        ...editingStudent,
-                                        categoria:
-                                          parseInt(e.target.value) || 0,
-                                      })
-                                    }
-                                    className="text-sm border border-gray-300 rounded px-2 py-1 w-16"
-                                  />
-                                ) : (
-                                  <span
-                                    className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getCategoryColor(
-                                      student.categoria
-                                    )}`}
-                                  >
-                                    Cat. {student.categoria}
-                                  </span>
-                                )}
-                              </td>
-                              <td className="px-4 py-4 whitespace-nowrap">
-                                <div className="flex items-center space-x-2">
-                                  {editingStudent?.id === student.id ? (
-                                    <>
-                                      <button
-                                        onClick={handleSaveEdit}
-                                        disabled={updateMutation.isPending}
-                                        className="p-2 text-green-600 hover:text-green-800 hover:bg-green-50 rounded-full transition-colors disabled:opacity-50"
-                                        title="Salvar alterações"
-                                      >
-                                        {updateMutation.isPending ? (
-                                          <Loader2 className="h-4 w-4 animate-spin" />
-                                        ) : (
-                                          <Save className="h-4 w-4" />
-                                        )}
-                                      </button>
-                                      <button
-                                        onClick={handleCancelEdit}
-                                        className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-full transition-colors"
-                                        title="Cancelar edição"
-                                      >
-                                        <X className="h-4 w-4" />
-                                      </button>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <button
-                                        onClick={() => handleEdit(student)}
-                                        className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-full transition-colors"
-                                        title="Editar atleta"
-                                      >
-                                        <Edit2 className="h-4 w-4" />
-                                      </button>
-                                      <button
-                                        onClick={() => handleDelete(student.id)}
-                                        disabled={
-                                          deletingStudent === student.id
-                                        }
-                                        className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-full transition-colors disabled:opacity-50"
-                                        title="Excluir atleta"
-                                      >
-                                        {deletingStudent === student.id ? (
-                                          <Loader2 className="h-4 w-4 animate-spin" />
-                                        ) : (
-                                          <Trash2 className="h-4 w-4" />
-                                        )}
-                                      </button>
-                                    </>
-                                  )}
-                                </div>
-                              </td>
-                            </tr>
-                          ))}
+                                </td>
+                              </tr>
+                            );
+                          })}
                         </tbody>
                       </table>
                     </div>
@@ -664,10 +703,16 @@ export default function ManageStudents() {
                   <div>
                     <label
                       htmlFor="categoria"
-                      className="block text-sm font-medium text-gray-700 mb-2"
+                      className="text-sm font-medium text-gray-700 mb-2"
                     >
                       Categoria *
                     </label>
+                    <button
+                      onClick={openCategoriesDoc}
+                      className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors m-4 ml-0"
+                    >
+                      <span>Ver lista de Categorias</span>
+                    </button>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <Target className="h-4 w-4 text-gray-400" />
@@ -721,6 +766,17 @@ export default function ManageStudents() {
                     )}
                   </button>
                 </div>
+                <p className="text-sm text-gray-600 mt-5">
+                  Enfrenta problemas?{" "}
+                  <a
+                    href="https://api.whatsapp.com/send?phone=%205577988871958&text=Preciso+de+apoio+ao+cadastrar+atletas"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-red-600 hover:text-red-500 transition-colors"
+                  >
+                    Entre em contato conosco
+                  </a>
+                </p>
               </div>
             </div>
           </div>

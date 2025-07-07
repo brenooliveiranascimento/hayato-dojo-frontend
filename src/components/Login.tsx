@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Mail, Lock, AlertCircle, Loader2 } from "lucide-react";
 import { useAuthStore } from "../store/auth.store";
 import { useNavigate } from "react-router-dom";
@@ -48,7 +48,7 @@ export default function Login() {
             />
           </div>
           <h2 className="text-3xl font-bold text-gray-900">
-            II CAMPEONATO JESUÍNO COUTINHO
+            II CAMPEONATO JESUÍNO COUTINHO DOJO HAYATO
           </h2>
           <p className="mt-2 text-sm text-gray-600">
             Acesse sua conta para gerenciar seus atletas
@@ -127,7 +127,7 @@ export default function Login() {
               type="submit"
               onClick={() => mutation.mutate()}
               disabled={loading}
-              className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               {loading ? (
                 <>
@@ -149,6 +149,18 @@ export default function Login() {
                 className="font-medium text-red-600 hover:text-red-500 transition-colors"
               >
                 Cadastre aqui
+              </a>
+            </p>
+
+            <p className="text-sm text-gray-600 mt-5">
+              Esqueceu sua senha ou enfrenta problemas?{" "}
+              <a
+                href="https://api.whatsapp.com/send?phone=%205577988871958&text=Preciso+de+apoio+ao+cadastrar+ao+realizar+o+login+da+minha+conta"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-red-600 hover:text-red-500 transition-colors"
+              >
+                Entre em contato conosco
               </a>
             </p>
           </div>
