@@ -212,7 +212,7 @@ export default function ManageStudents() {
 
             <button
               onClick={logout}
-              className="flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors shadow-md hover:shadow-lg"
+              className="cursor-pointer flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors shadow-md hover:shadow-lg"
             >
               <LogOut className="h-4 w-4" />
               <span>Sair</span>
