@@ -26,10 +26,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-      <Route
-        path="/dojos"
-        element={token ? <RegisterDojo /> : <Navigate to="/login" replace />}
-      />
+      <Route path="/dojos" element={<RegisterDojo />} />
       <Route
         path="/students"
         element={token ? <ManageStudents /> : <Navigate to="/login" replace />}

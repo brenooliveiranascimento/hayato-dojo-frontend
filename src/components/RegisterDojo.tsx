@@ -36,8 +36,6 @@ export default function RegisterDojo() {
     },
     onSuccess: (res) => {
       setIsLoading(false);
-      window.location.href = "/login";
-
       const { token, dojo } = res;
       if (token) {
         setToken(token);
