@@ -12,6 +12,7 @@ export interface StudentResponse {
   dojoId: number;
   criadoEm: string;
   atualizadoEm: string;
+  categoriaKata: number;
 }
 
 interface StudentsResponse {

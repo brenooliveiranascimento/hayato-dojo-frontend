@@ -45,7 +45,8 @@ export default function RegisterDojo() {
         console.error("Token não recebido no login");
       }
     },
-    onError: () => {
+    onError: (error) => {
+      console.log(error);
       setIsLoading(false);
     },
   });

@@ -30,7 +30,7 @@ import {
 import { useAuthStore } from "../store/auth.store";
 import { toast } from "react-toastify";
 import categoriesDocx from "../assets/II-CAMPEONATO-JESUINO-COUTINHO-categorias.docx";
-
+import { useNavigate } from "react-router-dom";
 export type Student = {
   id: number;
   nome: string;
@@ -38,6 +38,7 @@ export type Student = {
   peso: string;
   kyu: string;
   categoria: number;
+  categoriaKata: number;
   dan?: number;
 };
 
@@ -48,6 +49,7 @@ const initialValues = {
   kyu: "",
   categoria: 0,
   dan: undefined,
+  categoriaKata: 0,
 };
 
 export default function ManageStudents() {
@@ -59,6 +61,7 @@ export default function ManageStudents() {
   );
   const [deletingStudent, setDeletingStudent] = useState<number | null>(null);
   const { logout, dojo } = useAuthStore();
+  const navigate = useNavigate();
 
   const {
     data: students,
@@ -66,8 +69,16 @@ export default function ManageStudents() {
     isError: qError,
   } = useQuery({
     queryKey: ["alunos"],
-    queryFn: () => getDojoStudents(),
+    queryFn: () => {
+      return getDojoStudents();
+    },
   });
+
+  if (qError) {
+    toast("Ocorreu um erro inesperado, logue novamente");
+    logout();
+    navigate("/");
+  }
 
   const [form, setForm] = useState<Omit<Student, "id">>(initialValues);
 
@@ -77,7 +88,7 @@ export default function ManageStudents() {
       form.nome.trim() !== "" &&
       form.idade > 0 &&
       form.peso.trim() !== "" &&
-      form.categoria > 0 &&
+      Boolean(form.categoria || form.categoriaKata) &&
       (form.kyu.trim() !== "" || (form.dan !== undefined && form.dan > 0))
     );
   };
@@ -119,6 +130,7 @@ export default function ManageStudents() {
         kyu: student.kyu,
         categoria: student.categoria,
         dan: student.dan,
+        categoriaKata: student.categoriaKata,
       }),
     onError: (error: any) => {
       toast.error(error.response.data.error);
@@ -160,25 +172,10 @@ export default function ManageStudents() {
     }
   };
 
-  const maxNameLength = 15; // define limite de caracteres
-
-  const getCategoryColor = (categoria: number) => {
-    switch (categoria) {
-      case 1:
-        return "bg-blue-100 text-blue-800";
-      case 2:
-        return "bg-green-100 text-green-800";
-      case 3:
-        return "bg-purple-100 text-purple-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
+  const maxNameLength = 15;
 
   const getKyuColor = (kyu: string) => {
-    if (kyu.includes("1º")) return "bg-red-100 text-red-800";
-    if (kyu.includes("2º")) return "bg-orange-100 text-orange-800";
-    if (kyu.includes("3º")) return "bg-yellow-100 text-yellow-800";
+    if (Number(kyu) === 1) return "bg-gray-100 text-gray-800";
     return "bg-gray-100 text-gray-800";
   };
 
@@ -315,7 +312,10 @@ export default function ManageStudents() {
                               Dan
                             </th>
                             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Categoria
+                              Categoria Shiai
+                            </th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                              Categoria Kata
                             </th>
                             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                               Ações
@@ -465,11 +465,31 @@ export default function ManageStudents() {
                                     />
                                   ) : (
                                     <span
-                                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getCategoryColor(
-                                        student.categoria
-                                      )}`}
+                                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800`}
                                     >
                                       Cat. {student.categoria}
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="px-4 py-4 whitespace-nowrap">
+                                  {editingStudent?.id === student.id ? (
+                                    <input
+                                      type="number"
+                                      value={editingStudent.categoriaKata}
+                                      onChange={(e) =>
+                                        setEditingStudent({
+                                          ...editingStudent,
+                                          categoriaKata:
+                                            parseInt(e.target.value) || 0,
+                                        })
+                                      }
+                                      className="text-sm border border-gray-300 rounded px-2 py-1 w-16"
+                                    />
+                                  ) : (
+                                    <span
+                                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800`}
+                                    >
+                                      Cat: {student.categoriaKata}
                                     </span>
                                   )}
                                 </td>
@@ -699,20 +719,14 @@ export default function ManageStudents() {
                     pretas.
                   </div>
 
-                  {/* Categoria */}
                   <div>
                     <label
                       htmlFor="categoria"
                       className="text-sm font-medium text-gray-700 mb-2"
                     >
-                      Categoria *
+                      Categoria Shiai (Luta)
                     </label>
-                    <button
-                      onClick={openCategoriesDoc}
-                      className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors m-4 ml-0"
-                    >
-                      <span>Ver lista de Categorias</span>
-                    </button>
+
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <Target className="h-4 w-4 text-gray-400" />
@@ -732,6 +746,47 @@ export default function ManageStudents() {
                         min="1"
                         className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm"
                       />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="categoria"
+                      className="text-sm font-medium text-gray-700 mb-2"
+                    >
+                      Categoria Kata
+                    </label>
+
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Target className="h-4 w-4 text-gray-400" />
+                      </div>
+                      <input
+                        id="categoria"
+                        type="number"
+                        placeholder="Categoria"
+                        value={form.categoriaKata || ""}
+                        onChange={(e) =>
+                          setForm((f) => ({
+                            ...f,
+                            categoriaKata: parseInt(e.target.value) || 0,
+                          }))
+                        }
+                        required
+                        min="1"
+                        className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm"
+                      />
+                    </div>
+                    <button
+                      onClick={openCategoriesDoc}
+                      className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors m-4 ml-0"
+                    >
+                      <span>Ver lista de Categorias</span>
+                    </button>
+
+                    <div className="text-xs text-gray-500 bg-blue-50 p-3 rounded-lg">
+                      <strong>Nota:</strong> O atleta deve estar em pelo menos
+                      uma modalidade!
                     </div>
                   </div>
 
