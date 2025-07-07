@@ -11,6 +11,8 @@ import {
   CheckCircle,
 } from "lucide-react";
 import logo from "../assets/logo.png";
+import { useAuthStore } from "../store/auth.store";
+import { useNavigate } from "react-router-dom";
 
 export default function RegisterDojo() {
   const [nome, setNome] = useState("");
@@ -18,6 +20,9 @@ export default function RegisterDojo() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const setToken = useAuthStore((state) => state.setToken);
+  const setDojo = useAuthStore((state) => state.setDojo);
+  const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: () => {
@@ -29,9 +34,18 @@ export default function RegisterDojo() {
         senha,
       });
     },
-    onSuccess: () => {
+    onSuccess: (res) => {
       setIsLoading(false);
       window.location.href = "/login";
+
+      const { token, dojo } = res;
+      if (token) {
+        setToken(token);
+        setDojo(dojo);
+        navigate("/students");
+      } else {
+        console.error("Token não recebido no login");
+      }
     },
     onError: () => {
       setIsLoading(false);
