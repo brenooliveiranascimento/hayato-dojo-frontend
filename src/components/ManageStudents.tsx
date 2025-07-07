@@ -75,7 +75,7 @@ export default function ManageStudents() {
   });
 
   if (qError) {
-    toast("Ocorreu um erro inesperado, logue novamente");
+    toast.error("Ocorreu um erro inesperado, logue novamente");
     logout();
     navigate("/");
   }
