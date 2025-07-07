@@ -570,7 +570,7 @@ export default function ManageStudents() {
                   <div className="text-xs text-gray-500 bg-yellow-50 p-3 rounded-lg">
                     <strong>Campos obrigatórios:</strong> Preencha todos os
                     campos marcados com * e pelo menos uma graduação (Kyu ou
-                    Dan).
+                    Dan) e uma categoria.
                   </div>
                 )}
                 <div className="space-y-4 mt-6">
@@ -720,6 +720,14 @@ export default function ManageStudents() {
                   </div>
 
                   <div>
+                    <button
+                      onClick={openCategoriesDoc}
+                      className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer mb-2"
+                    >
+                      <span className="text-center">
+                        Ver lista de Categorias e regulamento
+                      </span>
+                    </button>
                     <label
                       htmlFor="categoria"
                       className="text-sm font-medium text-gray-700 mb-2"
@@ -777,14 +785,8 @@ export default function ManageStudents() {
                         className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm"
                       />
                     </div>
-                    <button
-                      onClick={openCategoriesDoc}
-                      className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors m-4 ml-0"
-                    >
-                      <span>Ver lista de Categorias</span>
-                    </button>
 
-                    <div className="text-xs text-gray-500 bg-blue-50 p-3 rounded-lg">
+                    <div className="text-xs text-gray-500 bg-blue-50 p-3 rounded-lg mt-3">
                       <strong>Nota:</strong> O atleta deve estar em pelo menos
                       uma modalidade!
                     </div>
@@ -806,7 +808,7 @@ export default function ManageStudents() {
                     type="submit"
                     onClick={() => createMutation.mutate(form)}
                     disabled={isLoading || !isFormValid()}
-                    className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
                   >
                     {isLoading ? (
                       <>
@@ -816,7 +818,7 @@ export default function ManageStudents() {
                     ) : (
                       <>
                         <CheckCircle className="h-4 w-4 mr-2" />
-                        Cadastrar Aluno
+                        Cadastrar Atleta
                       </>
                     )}
                   </button>

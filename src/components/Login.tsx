@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "../api/axios";
 import logo from "../assets/logo.png";
+import { toast } from "react-toastify";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -20,6 +21,9 @@ export default function Login() {
       return api.post("/login", { email, senha });
     },
     onError: () => {
+      toast.error(
+        "Erro ao realizar o login, caso persista entre em contato conosco"
+      );
       setLoading(false);
     },
     onSuccess: (res) => {

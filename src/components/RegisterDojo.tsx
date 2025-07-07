@@ -13,6 +13,7 @@ import {
 import logo from "../assets/logo.png";
 import { useAuthStore } from "../store/auth.store";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function RegisterDojo() {
   const [nome, setNome] = useState("");
@@ -45,8 +46,10 @@ export default function RegisterDojo() {
         console.error("Token não recebido no login");
       }
     },
-    onError: (error) => {
-      console.log(error);
+    onError: () => {
+      toast.error(
+        "Erro ao realizar o cadastro, caso persista entre em contato conosco"
+      );
       setIsLoading(false);
     },
   });
