@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 import { useAuthStore } from "../store/auth.store";
 import { toast } from "react-toastify";
-import categoriesDocx from "../assets/II-CAMPEONATO-JESUINO-COUTINHO-categorias.docx";
+import categoriesDocx from "../assets/II-CAMPEONATO-JESUINO-COUTINHO-categorias.pdf";
 import { useNavigate } from "react-router-dom";
 export type Student = {
   id: number;
@@ -106,7 +106,10 @@ export default function ManageStudents() {
     },
     mutationFn: (student: Omit<Student, "id">) => {
       setIsLoading(true);
-      return createStudent(student);
+      return createStudent({
+        ...student,
+        peso: student.peso.replace(",", "."),
+      });
     },
     onError: (error: any) => {
       toast.error(error.response.data.error);
@@ -204,6 +207,32 @@ export default function ManageStudents() {
     queryClient.clear();
 
     logout();
+  };
+
+  const handlePesoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+
+    // Remove todos os caracteres que não sejam números, vírgula ou ponto
+    value = value.replace(/[^0-9.,]/g, "");
+
+    // Substitui vírgula por ponto para padronizar
+    value = value.replace(",", ".");
+
+    // Garante que só existe um ponto decimal
+    const parts = value.split(".");
+    if (parts.length > 2) {
+      value = parts[0] + "." + parts.slice(1).join("");
+    }
+
+    // Limita a 2 casas decimais
+    if (parts.length === 2 && parts[1].length > 2) {
+      value = parts[0] + "." + parts[1].substring(0, 2);
+    }
+
+    // Atualiza o form apenas se o valor for válido ou vazio
+    if (value === "" || !isNaN(parseFloat(value))) {
+      setForm((f) => ({ ...f, peso: value }));
+    }
   };
 
   if (qLoading) return <p>Carregando alunos...</p>;
@@ -360,12 +389,14 @@ export default function ManageStudents() {
                                     <input
                                       type="number"
                                       value={editingStudent.idade}
-                                      onChange={(e) =>
+                                      onChange={(e) => {
+                                        if (isNaN(Number(e.target.value)))
+                                          return;
                                         setEditingStudent({
                                           ...editingStudent,
                                           idade: parseInt(e.target.value) || 0,
-                                        })
-                                      }
+                                        });
+                                      }}
                                       className="text-sm border border-gray-300 rounded px-2 py-1 w-16"
                                     />
                                   ) : (
@@ -377,12 +408,14 @@ export default function ManageStudents() {
                                     <input
                                       type="text"
                                       value={editingStudent.peso}
-                                      onChange={(e) =>
+                                      onChange={(e) => {
+                                        if (isNaN(Number(e.target.value)))
+                                          return;
                                         setEditingStudent({
                                           ...editingStudent,
                                           peso: e.target.value,
-                                        })
-                                      }
+                                        });
+                                      }}
                                       className="text-sm border border-gray-300 rounded px-2 py-1 w-20"
                                     />
                                   ) : (
@@ -398,12 +431,14 @@ export default function ManageStudents() {
                                       placeholder={
                                         editingStudent.dan ? "-----" : "Dan"
                                       }
-                                      onChange={(e) =>
+                                      onChange={(e) => {
+                                        if (isNaN(Number(e.target.value)))
+                                          return;
                                         setEditingStudent({
                                           ...editingStudent,
                                           kyu: e.target.value,
-                                        })
-                                      }
+                                        });
+                                      }}
                                       className="text-sm border border-gray-300 rounded px-2 py-1 w-20"
                                     />
                                   ) : student.kyu ? (
@@ -643,11 +678,17 @@ export default function ManageStudents() {
                       <input
                         id="peso"
                         type="text"
-                        placeholder="Ex: 70kg"
+                        placeholder="Ex: 70,5 ou 70.5"
                         value={form.peso}
-                        onChange={(e) =>
-                          setForm((f) => ({ ...f, peso: e.target.value }))
-                        }
+                        onChange={handlePesoChange}
+                        onBlur={(e) => {
+                          // Remove ponto final se existir
+                          let value = e.target.value;
+                          if (value.endsWith(".")) {
+                            value = value.slice(0, -1);
+                            setForm((f) => ({ ...f, peso: value }));
+                          }
+                        }}
                         required
                         className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm"
                       />
@@ -671,7 +712,10 @@ export default function ManageStudents() {
                         type="text"
                         placeholder="Ex: 1º Kyu"
                         value={form.kyu}
-                        onChange={(e) => handleKyuChange(e.target.value)}
+                        onChange={(e) => {
+                          if (isNaN(Number(e.target.value))) return;
+                          handleKyuChange(e.target.value);
+                        }}
                         disabled={form.dan !== undefined && form.dan > 0}
                         className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors text-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
                       />
