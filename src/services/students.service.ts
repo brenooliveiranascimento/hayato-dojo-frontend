@@ -79,16 +79,7 @@ export const createStudent = async (student: Omit<Student, "id">) => {
   await api.post("/alunos", student);
 };
 
-export const updateStudent = async (student: {
-  id: number;
-  nome: string;
-  idade: number;
-  peso: string;
-  kyu: string;
-  categoria: string;
-  categoriaKata: string;
-  dan?: number;
-}) => {
+export const updateStudent = async (student: Student) => {
   await api.put(`/alunos/${student.id}`, student);
 };
 

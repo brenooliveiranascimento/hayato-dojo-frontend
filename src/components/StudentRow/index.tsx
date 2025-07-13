@@ -28,9 +28,9 @@ export const StudentRow: FC<Props> = ({ student }) => {
         idade: student.idade,
         peso: student.peso,
         kyu: student.kyu,
-        categoria: student.categoria?.toString(),
+        categoria: student.categoria,
         dan: student.dan,
-        categoriaKata: student.categoriaKata.toString(),
+        categoriaKata: student.categoriaKata,
       }),
     onError: () => {},
   });
