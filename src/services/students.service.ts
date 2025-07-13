@@ -86,3 +86,12 @@ export const updateStudent = async (student: Student) => {
 export const deleteStudent = async (id: number) => {
   await api.delete(`/alunos/${id}`);
 };
+
+export const addTecnic = async (tecnics: string) => {
+  await api.post("/dojo/tecnics", { tecnics });
+};
+
+export const getTecnics = async () => {
+  const { data } = await api.get<{ tecnics: string }>("/dojo/tecnics");
+  return data;
+};
