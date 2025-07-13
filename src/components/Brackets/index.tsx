@@ -5,26 +5,34 @@ import { getKeys, type BracketGroup } from "../../services/students.service";
 
 // Componente customizado para renderizar cada seed
 const CustomSeed = ({ seed, breakpoint, roundIndex, seedIndex }) => {
-  const getTeamStyle = (teamName) => {
-    if (teamName === "BYE") {
-      return { color: "#999", fontStyle: "italic" };
+  const getTeamStyle = (teamName, index) => {
+    const backgroundColor =
+      index % 2 !== 0
+        ? "#4A90E2" // azul médio
+        : "#D9534F"; // vermelho carmesim
+
+    if (teamName === "Sem competidor") {
+      return { color: "#E6E7EB", fontStyle: "italic", backgroundColor };
     }
-    if (teamName === "TBD") {
-      return { color: "#666" };
-    }
-    return { fontWeight: "bold" };
+    // if (teamName === "TBD") {
+    //   return { color: "#E6E7EB", backgroundColor };
+    // }
+    return {
+      fontWeight: "bold",
+      backgroundColor,
+    };
   };
 
   return (
     <Seed mobileBreakpoint={breakpoint} style={{ fontSize: 12 }}>
       <SeedItem>
         <div>
-          <SeedTeam style={getTeamStyle(seed.teams[0]?.name)}>
-            {seed.teams[0]?.name || "NO TEAM"}
+          <SeedTeam style={getTeamStyle(seed.teams[0]?.name, 0)}>
+            {seed.teams[0]?.name || "____________"}
           </SeedTeam>
           <div style={{ height: 1, backgroundColor: "#ddd" }}></div>
-          <SeedTeam style={getTeamStyle(seed.teams[1]?.name)}>
-            {seed.teams[1]?.name || "NO TEAM"}
+          <SeedTeam style={getTeamStyle(seed.teams[1]?.name, 1)}>
+            {seed.teams[1]?.name || "____________"}
           </SeedTeam>
         </div>
       </SeedItem>
@@ -85,7 +93,6 @@ const KarateBracketsFINAL = () => {
     queryFn: () => getKeys(),
     queryKey: ["keys"],
   });
-
   useEffect(() => {
     if (data?.kumite) {
       setKumiteBrackets(data?.kata);
@@ -118,7 +125,7 @@ const KarateBracketsFINAL = () => {
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold mb-8 text-center">
-          Torneio de Karatê - Brackets
+          II CAMPEONATO JESUÍNO COUTINHO DOJO HAYATO
         </h1>
 
         {/* Seletor de tipo */}
@@ -148,7 +155,7 @@ const KarateBracketsFINAL = () => {
         {/* Brackets */}
         {currentBrackets?.length === 0 ? (
           <div className="text-center text-gray-500 text-lg">
-            Nenhum bracket disponível para {selectedType}
+            Nenhuma categoria disponível para {selectedType}
           </div>
         ) : (
           currentBrackets?.map((bracket, index) => (
@@ -157,7 +164,7 @@ const KarateBracketsFINAL = () => {
               className="mb-12 bg-white rounded-lg shadow-lg p-6"
             >
               {/* Informações da categoria */}
-              <div className="mb-6 text-center">
+              <div className="mb-6 text-center ">
                 <h2 className="text-2xl font-bold mb-2">
                   {bracket.categoriaInfo.categoria}
                 </h2>
@@ -184,16 +191,32 @@ const KarateBracketsFINAL = () => {
               </div>
 
               {/* Bracket */}
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto flex-row flex items-center justify-between">
                 <Bracket
                   rounds={bracket.rounds}
                   renderSeedComponent={CustomSeed}
-                  roundTitleComponent={(title, roundIndex) => (
+                  roundTitleComponent={(title) => (
                     <div className="text-center font-bold text-lg mb-4 text-gray-700">
                       {title}
                     </div>
                   )}
                 />
+                <div className="flex flex-col bg-red-50 p-2 rounded-2xl">
+                  <h3 className="mt-5">
+                    <strong>1º lugar</strong>
+                  </h3>
+                  <div className="border-2 w-[300px] h-7 rounded-2xl"></div>
+
+                  <h3 className="mt-5">
+                    <strong>2º lugar</strong>
+                  </h3>
+                  <div className="border-2 w-[300px] h-7 rounded-2xl"></div>
+
+                  <h3 className="mt-5">
+                    <strong>3º lugar</strong>
+                  </h3>
+                  <div className="border-2 w-[300px] h-7 rounded-2xl"></div>
+                </div>
               </div>
             </div>
           ))
