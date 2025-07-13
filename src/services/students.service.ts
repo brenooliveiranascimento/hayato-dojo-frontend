@@ -79,7 +79,16 @@ export const createStudent = async (student: Omit<Student, "id">) => {
   await api.post("/alunos", student);
 };
 
-export const updateStudent = async (student: Student) => {
+export const updateStudent = async (student: {
+  id: number;
+  nome: string;
+  idade: number;
+  peso: string;
+  kyu: string;
+  categoria: string;
+  categoriaKata: string;
+  dan?: number;
+}) => {
   await api.put(`/alunos/${student.id}`, student);
 };
 
@@ -88,7 +97,7 @@ export const deleteStudent = async (id: number) => {
 };
 
 export const addTecnic = async (tecnics: string) => {
-  await api.post("/dojo/tecnics", { tecnics });
+  await api.post("/dojo/tecnics/add", { tecnics });
 };
 
 export const getTecnics = async () => {

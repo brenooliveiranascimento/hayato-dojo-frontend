@@ -6,6 +6,11 @@ export const api = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
+// export const api = axios.create({
+//   baseURL: "http://localhost:3000",
+//   headers: { "Content-Type": "application/json" },
+// });
+
 // adiciona token no header se existir
 api.interceptors.request.use((config) => {
   const token = useAuthStore.getState().token;
