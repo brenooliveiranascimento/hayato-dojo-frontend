@@ -10,6 +10,7 @@ import Login from "./components/Login";
 import RegisterDojo from "./components/RegisterDojo";
 import { useAuthStore } from "./store/auth.store";
 import ManageStudents from "./components/ManageStudents";
+import KarateBracketsFINAL from "./components/Brackets";
 
 export default function App() {
   const token = useAuthStore((state) => state.token);
@@ -17,7 +18,6 @@ export default function App() {
   const location = useLocation();
 
   useEffect(() => {
-    // Só redireciona se estiver na rota raiz e tiver token
     if (token && location.pathname === "/") {
       navigate("/students", { replace: true });
     }
@@ -35,6 +35,8 @@ export default function App() {
         path="/"
         element={<Navigate to={token ? "/students" : "/login"} replace />}
       />
+      <Route path="/chaves" element={<KarateBracketsFINAL />} />
+
       <Route
         path="*"
         element={<Navigate to={token ? "/students" : "/login"} replace />}

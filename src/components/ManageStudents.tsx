@@ -31,6 +31,7 @@ import { useAuthStore } from "../store/auth.store";
 import { toast } from "react-toastify";
 import categoriesDocx from "../assets/II-CAMPEONATO-JESUINO-COUTINHO-categorias.pdf";
 import { useNavigate } from "react-router-dom";
+import TechniciansManager from "./TechnichsManeger";
 export type Student = {
   id: number;
   nome: string;
@@ -589,6 +590,9 @@ export default function ManageStudents() {
                     </div>
                   )}
                 </div>
+              </div>
+              <div className="max-w-4xl mx-auto mt-6">
+                <TechniciansManager />
               </div>
             </div>
 
