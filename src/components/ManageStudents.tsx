@@ -32,6 +32,7 @@ import { toast } from "react-toastify";
 import categoriesDocx from "../assets/II-CAMPEONATO-JESUINO-COUTINHO-categorias.pdf";
 import { useNavigate } from "react-router-dom";
 import TechniciansManager from "./TechnichsManeger";
+import Footer from "./Footer";
 export type Student = {
   id: number;
   nome: string;
@@ -887,6 +888,7 @@ export default function ManageStudents() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }
