@@ -21,7 +21,7 @@ import { useAuthStore } from "../store/auth.store";
 import { toast } from "react-toastify";
 import categoriesDocx from "../assets/II-CAMPEONATO-JESUINO-COUTINHO-categorias.pdf";
 import { useNavigate } from "react-router-dom";
-// import TechniciansManager from "./TechnichsManeger";
+import TechniciansManager from "./TechnichsManeger";
 import Footer from "./Footer";
 import { StudentRow } from "./StudentRow";
 export type Student = {
@@ -290,9 +290,9 @@ export default function ManageStudents() {
                   )}
                 </div>
               </div>
-              {/* <div className="max-w-4xl mx-auto mt-6">
+              <div className="max-w-4xl mx-auto mt-6">
                 <TechniciansManager />
-              </div> */}
+              </div>
             </div>
 
             {/* Formulário de Cadastro */}
