@@ -28,6 +28,7 @@ const CustomSeed = ({ seed, breakpoint }: CustomSeeds) => {
         backgroundColor,
         minHeight: 30,
         textAlign: "start",
+        minWidth: 250,
       };
     }
     return {
@@ -35,12 +36,13 @@ const CustomSeed = ({ seed, breakpoint }: CustomSeeds) => {
       backgroundColor,
       minHeight: 30,
       textAlign: "start",
+      minWidth: 250,
     };
   };
 
   return (
     <Seed mobileBreakpoint={breakpoint} style={{ fontSize: 12 }}>
-      <span className="text-[10px]">{seed.teams[0]?.dojo ?? ""}</span>
+      <span className="text-[13px]">{seed.teams[0]?.dojo ?? ""}</span>
       <SeedItem>
         <div>
           <SeedTeam style={getTeamStyle(seed.teams[0]?.name, 0)}>
@@ -52,7 +54,7 @@ const CustomSeed = ({ seed, breakpoint }: CustomSeeds) => {
           </SeedTeam>
         </div>
       </SeedItem>
-      <span className="text-[10px]">{seed.teams[1]?.dojo ?? ""}</span>
+      <span className="text-[13px]">{seed.teams[1]?.dojo ?? ""}</span>
     </Seed>
   );
 };
