@@ -26,13 +26,13 @@ const CustomSeed = ({ seed, breakpoint }: CustomSeeds) => {
         color: "#E6E7EB",
         fontStyle: "italic",
         backgroundColor,
-        height: 30,
+        minHeight: 30,
       };
     }
     return {
       fontWeight: "bold",
       backgroundColor,
-      height: 30,
+      minHeight: 30,
     };
   };
 
