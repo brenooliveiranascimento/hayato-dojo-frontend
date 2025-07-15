@@ -284,17 +284,17 @@ const KarateBracketsFINAL = () => {
                   <h3 className="mt-5">
                     <strong>1º lugar</strong>
                   </h3>
-                  <div className="border-b-2 w-[300px] h-7 "></div>
+                  <div className="border-b-2 w-[230px] h-7 "></div>
 
                   <h3 className="mt-5">
                     <strong>2º lugar</strong>
                   </h3>
-                  <div className="border-b-2 w-[300px] h-7 "></div>
+                  <div className="border-b-2 w-[230px] h-7 "></div>
 
                   <h3 className="mt-5">
                     <strong>3º lugar</strong>
                   </h3>
-                  <div className="border-b-2 w-[300px] h-7 "></div>
+                  <div className="border-b-2 w-[230px] h-7 "></div>
                 </div>
               </div>
               <span className="text-gray-500 text-[13px]">
