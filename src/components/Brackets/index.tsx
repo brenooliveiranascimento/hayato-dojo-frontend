@@ -5,37 +5,52 @@ import {
   Seed,
   SeedItem,
   SeedTeam,
-  type IRenderSeedProps,
+  type ISeedProps,
 } from "react-brackets";
 import { getKeys, type BracketGroup } from "../../services/students.service";
 import logo from "../../assets/logo.png";
 import { AlertCircle, Lock } from "lucide-react";
+import { useAuthStore } from "../../store/auth.store";
+import { Navigate, useNavigate } from "react-router-dom";
 
-const CustomSeed = ({ seed, breakpoint }: IRenderSeedProps) => {
+interface CustomSeeds {
+  seed: ISeedProps & { dojo?: string };
+  breakpoint: number;
+}
+
+const CustomSeed = ({ seed, breakpoint }: CustomSeeds) => {
   const getTeamStyle = (teamName: string | undefined, index: number) => {
     const backgroundColor = index % 2 !== 0 ? "#4A90E2" : "#D9534F";
     if (teamName === "Sem competidor") {
-      return { color: "#E6E7EB", fontStyle: "italic", backgroundColor };
+      return {
+        color: "#E6E7EB",
+        fontStyle: "italic",
+        backgroundColor,
+        height: 30,
+      };
     }
     return {
       fontWeight: "bold",
       backgroundColor,
+      height: 30,
     };
   };
 
   return (
     <Seed mobileBreakpoint={breakpoint} style={{ fontSize: 12 }}>
+      <span className="text-[15px]">{seed.teams[0]?.dojo ?? ""}</span>
       <SeedItem>
         <div>
           <SeedTeam style={getTeamStyle(seed.teams[0]?.name, 0)}>
-            {seed.teams[0]?.name || "____________"}
+            {seed.teams[0]?.atletaId || ""} - {seed.teams[0]?.name || ""}
           </SeedTeam>
           <div style={{ height: 1, backgroundColor: "#ddd" }}></div>
           <SeedTeam style={getTeamStyle(seed.teams[1]?.name, 1)}>
-            {seed.teams[1]?.name || "____________"}
+            {seed.teams[1]?.atletaId || ""} - {seed.teams[1]?.name || ""}
           </SeedTeam>
         </div>
       </SeedItem>
+      <span className="text-[15px]">{seed.teams[1]?.dojo ?? ""}</span>
     </Seed>
   );
 };
@@ -48,6 +63,9 @@ const KarateBracketsFINAL = () => {
   const [allowed, setAllowed] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
+  const navigate = useNavigate();
+
+  const { token } = useAuthStore();
 
   const handleCheckPassword = () => {
     if (password === "hayatoDojo321") {
@@ -74,6 +92,10 @@ const KarateBracketsFINAL = () => {
       setKataBrackets(data?.kata);
     }
   }, [data]);
+
+  if (!token) {
+    return <Navigate to={"/"} />;
+  }
 
   if (!allowed) {
     return (
@@ -138,6 +160,17 @@ const KarateBracketsFINAL = () => {
                 className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
               >
                 Entrar
+              </button>
+
+              <button
+                type="submit"
+                onClick={() => {
+                  navigate("/");
+                }}
+                disabled={loading}
+                className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium   hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+              >
+                Voltar
               </button>
             </div>
           </div>
@@ -208,7 +241,7 @@ const KarateBracketsFINAL = () => {
             >
               <div className="mb-6 text-center ">
                 <h2 className="text-2xl font-bold mb-2">
-                  Categoria: {bracket.categoriaInfo.categoria}
+                  {selectedType} Código: {bracket.categoriaInfo.categoria}
                 </h2>
                 <div className="flex justify-center space-x-6 text-gray-600">
                   <span>
@@ -243,23 +276,26 @@ const KarateBracketsFINAL = () => {
                     </div>
                   )}
                 />
-                <div className="flex flex-col bg-red-50 p-2 rounded-2xl">
+                <div className="flex flex-col  rounded-2xl">
                   <h3 className="mt-5">
                     <strong>1º lugar</strong>
                   </h3>
-                  <div className="border-2 w-[300px] h-7 rounded-2xl"></div>
+                  <div className="border-b-2 w-[300px] h-7 "></div>
 
                   <h3 className="mt-5">
                     <strong>2º lugar</strong>
                   </h3>
-                  <div className="border-2 w-[300px] h-7 rounded-2xl"></div>
+                  <div className="border-b-2 w-[300px] h-7 "></div>
 
                   <h3 className="mt-5">
                     <strong>3º lugar</strong>
                   </h3>
-                  <div className="border-2 w-[300px] h-7 rounded-2xl"></div>
+                  <div className="border-b-2 w-[300px] h-7 "></div>
                 </div>
               </div>
+              <span className="text-gray-500 text-[13px]">
+                Desenvolvido por Breno Nascimento. (77988871958)
+              </span>
             </div>
           ))
         )}
