@@ -280,7 +280,7 @@ const KarateBracketsFINAL = () => {
                     </div>
                   )}
                 />
-                <div className="flex flex-col  rounded-2xl">
+                <div className="flex flex-col rounded-2xl relative right-0 bottom-0">
                   <h3 className="mt-5">
                     <strong>1º lugar</strong>
                   </h3>
