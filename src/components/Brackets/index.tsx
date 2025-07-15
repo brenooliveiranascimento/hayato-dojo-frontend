@@ -44,11 +44,11 @@ const CustomSeed = ({ seed, breakpoint }: CustomSeeds) => {
       <SeedItem>
         <div>
           <SeedTeam style={getTeamStyle(seed.teams[0]?.name, 0)}>
-            {seed.teams[0]?.atletaId || ""} - {seed.teams[0]?.name || ""}
+            {seed.teams[0]?.name || ""}
           </SeedTeam>
           <div style={{ height: 1, backgroundColor: "#ddd" }}></div>
           <SeedTeam style={getTeamStyle(seed.teams[1]?.name, 1)}>
-            {seed.teams[1]?.atletaId || ""} - {seed.teams[1]?.name || ""}
+            {seed.teams[1]?.name || ""}
           </SeedTeam>
         </div>
       </SeedItem>
