@@ -27,12 +27,14 @@ const CustomSeed = ({ seed, breakpoint }: CustomSeeds) => {
         fontStyle: "italic",
         backgroundColor,
         minHeight: 30,
+        textAlign: "start",
       };
     }
     return {
       fontWeight: "bold",
       backgroundColor,
       minHeight: 30,
+      textAlign: "start",
     };
   };
 
