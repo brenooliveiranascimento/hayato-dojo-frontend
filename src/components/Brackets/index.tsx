@@ -11,20 +11,12 @@ import { getKeys, type BracketGroup } from "../../services/students.service";
 import logo from "../../assets/logo.png";
 import { AlertCircle, Lock } from "lucide-react";
 
-// Componente customizado para renderizar cada seed
 const CustomSeed = ({ seed, breakpoint }: IRenderSeedProps) => {
   const getTeamStyle = (teamName: string | undefined, index: number) => {
-    const backgroundColor =
-      index % 2 !== 0
-        ? "#4A90E2" // azul médio
-        : "#D9534F"; // vermelho carmesim
-
+    const backgroundColor = index % 2 !== 0 ? "#4A90E2" : "#D9534F";
     if (teamName === "Sem competidor") {
       return { color: "#E6E7EB", fontStyle: "italic", backgroundColor };
     }
-    // if (teamName === "TBD") {
-    //   return { color: "#E6E7EB", backgroundColor };
-    // }
     return {
       fontWeight: "bold",
       backgroundColor,
@@ -76,10 +68,10 @@ const KarateBracketsFINAL = () => {
   });
   useEffect(() => {
     if (data?.kumite) {
-      setKumiteBrackets(data?.kata);
+      setKumiteBrackets(data?.kumite);
     }
     if (data?.kata) {
-      setKataBrackets(data?.kumite);
+      setKataBrackets(data?.kata);
     }
   }, [data]);
 
@@ -190,7 +182,7 @@ const KarateBracketsFINAL = () => {
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
           >
-            Kumite (Luta)
+            Kumite
           </button>
           <button
             onClick={() => setSelectedType("kata")}
@@ -200,11 +192,10 @@ const KarateBracketsFINAL = () => {
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
           >
-            Kata (Forma)
+            Kata
           </button>
         </div>
 
-        {/* Brackets */}
         {currentBrackets?.length === 0 ? (
           <div className="text-center text-gray-500 text-lg">
             Nenhuma categoria disponível para {selectedType}
@@ -215,10 +206,9 @@ const KarateBracketsFINAL = () => {
               key={index}
               className="mb-12 bg-white rounded-lg shadow-lg p-6"
             >
-              {/* Informações da categoria */}
               <div className="mb-6 text-center ">
                 <h2 className="text-2xl font-bold mb-2">
-                  {bracket.categoriaInfo.categoria}
+                  Categoria: {bracket.categoriaInfo.categoria}
                 </h2>
                 <div className="flex justify-center space-x-6 text-gray-600">
                   <span>

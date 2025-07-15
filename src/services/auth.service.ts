@@ -6,7 +6,7 @@ export interface userData {
 }
 
 export interface Dojo {
-  id: 1;
+  id: number;
   nome: string;
   cidade: string;
   email: string;

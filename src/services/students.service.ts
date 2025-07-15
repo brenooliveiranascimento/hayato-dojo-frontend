@@ -95,3 +95,26 @@ export const getTecnics = async () => {
   const { data } = await api.get<{ tecnics: string }>("/dojo/tecnics");
   return data;
 };
+
+type DojoWhatsAppResponse = {
+  dojos: Array<{
+    nome: string;
+    mensagem: string;
+    links: {
+      whatsapp: string;
+      whatsappApi: string;
+    };
+    totalAlunos: string;
+  }>;
+  totais: {
+    alunos: number;
+    dojosComAlunos: number;
+  };
+};
+
+export const getDojoWhatsAppMessages =
+  async (): Promise<DojoWhatsAppResponse> => {
+    const { data } = await api.get("/dojo/alunos/message");
+
+    return data;
+  };

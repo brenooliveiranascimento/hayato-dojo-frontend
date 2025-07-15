@@ -24,6 +24,7 @@ import { useNavigate } from "react-router-dom";
 import TechniciansManager from "./TechnichsManeger";
 import Footer from "./Footer";
 import { StudentRow } from "./StudentRow";
+import DojoWhatsAppList from "./DojoWhatsappList";
 export type Student = {
   id: number;
   nome: string;
@@ -292,6 +293,7 @@ export default function ManageStudents() {
               </div>
               <div className="max-w-4xl mx-auto mt-6">
                 <TechniciansManager />
+                <DojoWhatsAppList />
               </div>
             </div>
 
