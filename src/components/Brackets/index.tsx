@@ -25,9 +25,9 @@ interface CustomSeeds {
 }
 
 const CustomSeed = ({ seed, breakpoint }: CustomSeeds) => {
-  const getTeamStyle = (teamName: string | undefined, index: number) => {
+  const getTeamStyle = (teamName: Team | undefined, index: number) => {
     const backgroundColor = index % 2 !== 0 ? "#4A90E2" : "#D9534F";
-    if (teamName === "Sem competidor") {
+    if (teamName?.name === "Sem competidor") {
       return {
         color: "#E6E7EB",
         fontStyle: "italic",
@@ -56,14 +56,14 @@ const CustomSeed = ({ seed, breakpoint }: CustomSeeds) => {
 
     const parts = [];
     if (team.dojo) parts.push(`Dojo: ${team.dojo}`);
-    if (team.idade) parts.push(`Idade: ${team.idade} anos`);
-    if (team.peso) parts.push(`Peso: ${team.peso}kg`);
-    if (team.kyu) parts.push(`Kyu: ${team.kyu}`);
-    if (team.dan) parts.push(`Dan: ${team.dan}`);
     if (team.categoria) parts.push(`Categoria Kumite: ${team.categoria}`);
     if (team.categoriaKata) parts.push(`Categoria Kata: ${team.categoriaKata}`);
+    if (team.idade) parts.push(`Idade: ${team.idade} anos`);
+    if (team.kyu) parts.push(`Kyu: ${team.kyu}`);
+    if (team.dan) parts.push(`Dan: ${team.dan}`);
+    if (team.peso) parts.push(`Peso: ${team.peso}kg`);
 
-    return parts.join("\n");
+    return parts.join(" | ");
   };
 
   return (
@@ -76,7 +76,7 @@ const CustomSeed = ({ seed, breakpoint }: CustomSeeds) => {
             data-tooltip-content={getTooltipContent(seed.teams[0] as Team)}
             data-tooltip-place="top"
           >
-            <SeedTeam style={getTeamStyle(seed.teams[0]?.name, 0)}>
+            <SeedTeam style={getTeamStyle(seed.teams[0] as Team, 0)}>
               {seed.teams[0]?.name || ""}
             </SeedTeam>
           </div>
@@ -104,7 +104,7 @@ const CustomSeed = ({ seed, breakpoint }: CustomSeeds) => {
             data-tooltip-content={getTooltipContent(seed.teams[1] as Team)}
             data-tooltip-place="top"
           >
-            <SeedTeam style={getTeamStyle(seed.teams[1]?.name, 1)}>
+            <SeedTeam style={getTeamStyle(seed.teams[1] as Team, 1)}>
               {seed.teams[1]?.name || ""}
             </SeedTeam>
           </div>
