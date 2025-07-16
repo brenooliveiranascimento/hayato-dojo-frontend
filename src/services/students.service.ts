@@ -33,6 +33,13 @@ export const getDojoStudents = async () => {
 export interface Team {
   name: string;
   atletaId?: number;
+  dojo?: string;
+  idade?: number;
+  peso?: number;
+  kyu?: string;
+  dan?: string;
+  categoria?: number;
+  categoriaKata?: number;
 }
 
 export interface Seed {

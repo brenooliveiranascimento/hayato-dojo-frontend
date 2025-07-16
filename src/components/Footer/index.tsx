@@ -18,7 +18,7 @@ const Footer: React.FC<FooterProps> = ({ className = "" }) => {
     {
       name: "Instagram",
       icon: <Instagram className="h-5 w-5" />,
-      url: "https://instagram.com/brenonnascimento",
+      url: "https://www.instagram.com/allblack_arts/",
       color: "hover:text-pink-600",
     },
     {

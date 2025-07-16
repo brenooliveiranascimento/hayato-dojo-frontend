@@ -7,11 +7,17 @@ import {
   SeedTeam,
   type ISeedProps,
 } from "react-brackets";
-import { getKeys, type BracketGroup } from "../../services/students.service";
+import {
+  getKeys,
+  type BracketGroup,
+  type Team,
+} from "../../services/students.service";
 import logo from "../../assets/logo.png";
 import { AlertCircle, Lock } from "lucide-react";
 import { useAuthStore } from "../../store/auth.store";
 import { Navigate, useNavigate } from "react-router-dom";
+import "react-tooltip/dist/react-tooltip.css";
+import { Tooltip } from "react-tooltip";
 
 interface CustomSeeds {
   seed: ISeedProps & { dojo?: string };
@@ -27,34 +33,98 @@ const CustomSeed = ({ seed, breakpoint }: CustomSeeds) => {
         fontStyle: "italic",
         backgroundColor,
         minHeight: 30,
-        textAlign: "start",
+        textAlign: "start" as const,
         minWidth: 250,
+        padding: "5px 10px",
+        cursor: "default",
       };
     }
     return {
       fontWeight: "bold",
       backgroundColor,
       minHeight: 30,
-      textAlign: "start",
+      textAlign: "start" as const,
       minWidth: 250,
+      padding: "5px 10px",
+      cursor: "pointer",
     };
+  };
+
+  // Função para formatar as informações do tooltip
+  const getTooltipContent = (team: Team) => {
+    if (!team || team.name === "Sem competidor" || !team.name) return "";
+
+    const parts = [];
+    if (team.dojo) parts.push(`Dojo: ${team.dojo}`);
+    if (team.idade) parts.push(`Idade: ${team.idade} anos`);
+    if (team.peso) parts.push(`Peso: ${team.peso}kg`);
+    if (team.kyu) parts.push(`Kyu: ${team.kyu}`);
+    if (team.dan) parts.push(`Dan: ${team.dan}`);
+    if (team.categoria) parts.push(`Categoria Kumite: ${team.categoria}`);
+    if (team.categoriaKata) parts.push(`Categoria Kata: ${team.categoriaKata}`);
+
+    return parts.join("\n");
   };
 
   return (
     <Seed mobileBreakpoint={breakpoint} style={{ fontSize: 12 }}>
-      <span className="text-[11px]">{seed.teams[0]?.dojo ?? ""}</span>
       <SeedItem>
         <div>
-          <SeedTeam style={getTeamStyle(seed.teams[0]?.name, 0)}>
-            {seed.teams[0]?.name || ""}
-          </SeedTeam>
+          {/* Primeiro competidor */}
+          <div
+            data-tooltip-id={`athlete-tooltip-${seed.id}-0-${seed.teams[0]?.name}`}
+            data-tooltip-content={getTooltipContent(seed.teams[0] as Team)}
+            data-tooltip-place="top"
+          >
+            <SeedTeam style={getTeamStyle(seed.teams[0]?.name, 0)}>
+              {seed.teams[0]?.name || ""}
+            </SeedTeam>
+          </div>
+
+          {seed.teams[0]?.name && seed.teams[0]?.name !== "Sem competidor" && (
+            <Tooltip
+              id={`athlete-tooltip-${seed.id}-0-${seed.teams[0]?.name}`}
+              className="custom-tooltip"
+              style={{
+                backgroundColor: "#1f2937",
+                color: "#fff",
+                padding: "8px 12px",
+                borderRadius: "6px",
+                fontSize: "12px",
+                zIndex: 9999,
+              }}
+            />
+          )}
+
           <div style={{ height: 1, backgroundColor: "#ddd" }}></div>
-          <SeedTeam style={getTeamStyle(seed.teams[1]?.name, 1)}>
-            {seed.teams[1]?.name || ""}
-          </SeedTeam>
+
+          {/* Segundo competidor */}
+          <div
+            data-tooltip-id={`athlete-tooltip-${seed.id}-1-${seed.teams[1]?.name}`}
+            data-tooltip-content={getTooltipContent(seed.teams[1] as Team)}
+            data-tooltip-place="top"
+          >
+            <SeedTeam style={getTeamStyle(seed.teams[1]?.name, 1)}>
+              {seed.teams[1]?.name || ""}
+            </SeedTeam>
+          </div>
+
+          {seed.teams[1]?.name && seed.teams[1]?.name !== "Sem competidor" && (
+            <Tooltip
+              id={`athlete-tooltip-${seed.id}-1-${seed.teams[1]?.name}`}
+              className="custom-tooltip"
+              style={{
+                backgroundColor: "#1f2937",
+                color: "#fff",
+                padding: "8px 12px",
+                borderRadius: "6px",
+                fontSize: "12px",
+                zIndex: 9999,
+              }}
+            />
+          )}
         </div>
       </SeedItem>
-      <span className="text-[11px]">{seed.teams[1]?.dojo ?? ""}</span>
     </Seed>
   );
 };
@@ -241,11 +311,13 @@ const KarateBracketsFINAL = () => {
           currentBrackets?.map((bracket, index) => (
             <div
               key={index}
-              className="mb-12 bg-white rounded-lg shadow-lg p-6"
+              className="mb-12 bg-white rounded-lg shadow-lg p-8 w-full mx-auto"
             >
-              <div className="mb-6 text-center ">
+              {/* Cabeçalho da Categoria */}
+              <div className="mb-6 text-center">
                 <h2 className="text-2xl font-bold mb-2">
-                  {selectedType} Código: {bracket.categoriaInfo.categoria}
+                  {selectedType.toUpperCase()} - Código:{" "}
+                  {bracket.categoriaInfo.categoria}
                 </h2>
                 <div className="flex justify-center space-x-6 text-gray-600">
                   <span>
@@ -269,37 +341,58 @@ const KarateBracketsFINAL = () => {
                 </div>
               </div>
 
-              {/* Bracket */}
-              <div className="overflow-x-auto flex-row flex items-center justify-between">
-                <Bracket
-                  rounds={bracket.rounds}
-                  renderSeedComponent={CustomSeed}
-                  roundTitleComponent={(title) => (
-                    <div className="text-center font-bold text-lg mb-4 text-gray-700">
-                      {title}
+              {/* Container do Bracket com posicionamento relativo */}
+              <div className="relative w-full">
+                {/* Área do Bracket com scroll horizontal se necessário */}
+                <div className="overflow-x-auto pb-32">
+                  <div className="inline-block min-w-full">
+                    <Bracket
+                      rounds={bracket.rounds}
+                      renderSeedComponent={CustomSeed}
+                      roundTitleComponent={(title) => (
+                        <div className="text-center font-bold text-lg mb-4 text-gray-700">
+                          {title}
+                        </div>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                {/* Box de Classificação Final - Posicionado no canto inferior direito */}
+                <div className="absolute bottom-0 right-0 bg-white p-4 shadow-lg rounded-lg m-4">
+                  <h3 className="font-bold mb-2">Classificação Final</h3>
+
+                  <div className="space-y-3">
+                    <div>
+                      <h4 className="text-sm font-semibold text-gray-700">
+                        1º lugar
+                      </h4>
+                      <div className="border-b-2 border-gray-300 w-[200px] h-7"></div>
                     </div>
-                  )}
-                />
-                <div className="flex flex-col rounded-2xl relative right-0 bottom-0">
-                  <h3 className="mt-5">
-                    <strong>1º lugar</strong>
-                  </h3>
-                  <div className="border-b-2 w-[230px] h-7 "></div>
 
-                  <h3 className="mt-5">
-                    <strong>2º lugar</strong>
-                  </h3>
-                  <div className="border-b-2 w-[230px] h-7 "></div>
+                    <div>
+                      <h4 className="text-sm font-semibold text-gray-700">
+                        2º lugar
+                      </h4>
+                      <div className="border-b-2 border-gray-300 w-[200px] h-7"></div>
+                    </div>
 
-                  <h3 className="mt-5">
-                    <strong>3º lugar</strong>
-                  </h3>
-                  <div className="border-b-2 w-[230px] h-7 "></div>
+                    <div>
+                      <h4 className="text-sm font-semibold text-gray-700">
+                        3º lugar
+                      </h4>
+                      <div className="border-b-2 border-gray-300 w-[200px] h-7"></div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <span className="text-gray-500 text-[13px]">
-                Desenvolvido por Breno Nascimento. (77988871958)
-              </span>
+
+              {/* Créditos */}
+              <div className="text-center mt-6 pt-4 border-t border-gray-200">
+                <span className="text-gray-500 text-xs">
+                  Desenvolvido por Breno Nascimento • (77) 98887-1958
+                </span>
+              </div>
             </div>
           ))
         )}
