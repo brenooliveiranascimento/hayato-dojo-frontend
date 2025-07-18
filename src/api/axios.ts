@@ -1,15 +1,15 @@
 import axios from "axios";
 import { useAuthStore } from "../store/auth.store";
 
-export const api = axios.create({
-  baseURL: "https://hayato-dojo-backend-production.up.railway.app",
-  headers: { "Content-Type": "application/json" },
-});
-
 // export const api = axios.create({
-//   baseURL: "http://localhost:3000",
+//   baseURL: "https://hayato-dojo-backend-production.up.railway.app",
 //   headers: { "Content-Type": "application/json" },
 // });
+
+export const api = axios.create({
+  baseURL: "http://localhost:3000",
+  headers: { "Content-Type": "application/json" },
+});
 
 // adiciona token no header se existir
 api.interceptors.request.use((config) => {

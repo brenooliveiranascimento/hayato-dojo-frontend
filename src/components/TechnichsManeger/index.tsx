@@ -132,7 +132,8 @@ const TechniciansManager: React.FC = () => {
         <div className="flex items-center space-x-2">
           <Users className="h-6 w-6 text-red-600" />
           <h2 className="text-xl font-semibold text-gray-900">
-            Gerenciar Técnicos ({localTechnicians.length})
+            Gerenciar Técnicos ({localTechnicians.length})<br/> A clínica de
+            arbitragem será no Centro pastoral de condeúba das 14 as 15 horas
           </h2>
         </div>
 
