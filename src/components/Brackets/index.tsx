@@ -52,7 +52,7 @@ const KarateBracketsFINAL = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="text-xl">Carregando brackets...</div>
+        <div className="text-xl">Carregando chaveamentos...</div>
       </div>
     );
   }
