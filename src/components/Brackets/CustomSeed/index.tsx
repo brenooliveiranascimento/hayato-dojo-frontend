@@ -1,8 +1,13 @@
-import { Seed, SeedItem, SeedTeam } from "react-brackets";
+import {
+  Seed,
+  SeedItem,
+  SeedTeam,
+  type IRenderSeedProps,
+} from "react-brackets";
 import type { Team } from "../../../services/students.service";
 import { Tooltip } from "react-tooltip";
 
-export const CustomSeed = ({ seed, breakpoint }: CustomSeeds) => {
+export const CustomSeed = ({ seed, breakpoint }: IRenderSeedProps) => {
   const getTeamStyle = (teamName: Team | undefined, index: number) => {
     const backgroundColor = index % 2 !== 0 ? "#4A90E2" : "#D9534F";
     if (teamName?.name === "--- Sem competidor ---") {

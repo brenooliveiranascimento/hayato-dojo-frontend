@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
-import { Download, Loader2 } from "lucide-react";
 import { getKeys, type BracketGroup } from "../../services/students.service";
 import { useAuthStore } from "../../store/auth.store";
 import { Navigate } from "react-router-dom";
