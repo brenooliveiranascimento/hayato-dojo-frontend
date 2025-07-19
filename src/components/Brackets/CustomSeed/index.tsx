@@ -17,7 +17,7 @@ export const CustomSeed = ({ seed, breakpoint }: IRenderSeedProps) => {
         backgroundColor,
         minHeight: 30,
         textAlign: "start" as const,
-        minWidth: 250,
+        minWidth: 300,
         padding: "5px 10px",
         cursor: "default",
       };
@@ -27,7 +27,7 @@ export const CustomSeed = ({ seed, breakpoint }: IRenderSeedProps) => {
       backgroundColor,
       minHeight: 30,
       textAlign: "start" as const,
-      minWidth: 250,
+      minWidth: 300,
       padding: "5px 10px",
       cursor: "pointer",
     };
@@ -51,7 +51,7 @@ export const CustomSeed = ({ seed, breakpoint }: IRenderSeedProps) => {
   };
 
   return (
-    <Seed mobileBreakpoint={breakpoint} style={{ fontSize: 12 }}>
+    <Seed mobileBreakpoint={breakpoint} style={{ fontSize: 18 }}>
       <SeedItem>
         <div>
           {/* Primeiro competidor */}

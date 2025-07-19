@@ -16,14 +16,14 @@ export const BracketItem: FC<Props> = ({ bracket, index, selectedType }) => {
     <div
       id={bracketId}
       key={index}
-      className="mb-12 bg-white rounded-lg shadow-lg p-8 w-full mx-auto"
+      className={`mb-12 bg-white rounded-lg shadow-lg p-6 w-full`}
     >
-      <div className="mb-6 text-center">
-        <h2 className="text-2xl font-bold mb-2">
+      <div className="mb-4 text-center print:mb-2">
+        <h2 className="text-xl font-bold mb-1 print:text-lg">
           {selectedType.toUpperCase()} - Código:{" "}
           {bracket.categoriaInfo.categoria}
         </h2>
-        <div className="flex justify-center space-x-6 text-gray-600">
+        <div className="flex justify-center space-x-4 text-sm text-gray-600 print:text-xs">
           <span>
             <strong>Gênero:</strong>{" "}
             {bracket.categoriaInfo.genero === "M" ? "Masculino" : "Feminino"}
@@ -43,14 +43,23 @@ export const BracketItem: FC<Props> = ({ bracket, index, selectedType }) => {
         </div>
       </div>
 
-      <div className="relative w-full">
-        <div className="overflow-x-auto pb-32">
-          <div className="inline-block min-w-full">
+      <div className="relative w-full" style={{ minHeight: "150mm" }}>
+        <div className="overflow-x-auto pb-24 print:overflow-visible print:pb-20">
+          <div
+            className="inline-block min-w-full print:w-full"
+            style={{
+              transform: "scale(0.8)",
+              transformOrigin: "top center",
+              // "@media print": {
+              //   transform: "scale(0.85)",
+              // },
+            }}
+          >
             <Bracket
               rounds={bracket.rounds}
               renderSeedComponent={CustomSeed}
               roundTitleComponent={(title) => (
-                <div className="text-center font-bold text-lg mb-4 text-gray-700">
+                <div className="text-center font-bold text-base mb-2 text-gray-700 print:text-sm print:mb-1">
                   {title}
                 </div>
               )}
@@ -58,39 +67,40 @@ export const BracketItem: FC<Props> = ({ bracket, index, selectedType }) => {
           </div>
         </div>
 
-        <div className="absolute bottom-0 right-0 bg-white p-4 shadow-lg rounded-lg m-4">
-          <h3 className="font-bold mb-2">Classificação Final</h3>
+        <div className="absolute bottom-80 right-0 bg-white p-3 shadow-lg rounded-lg m-3 print:shadow-none print:border print:border-gray-400 print:p-2 print:m-2 mt-[-50]">
+          <h3 className="font-bold mb-1 text-sm print:text-xs">
+            Classificação Final
+          </h3>
 
-          <div className="space-y-3">
+          <div className="space-y-2 print:space-y-1">
             <div>
-              <h4 className="text-sm font-semibold text-gray-700">1º lugar</h4>
-              <div className="border-b-2 border-gray-300 w-[200px] h-7"></div>
+              <h4 className="text-xs font-semibold text-gray-700">1º lugar</h4>
+              <div className="border-b-2 border-gray-300 w-[180px] h-5 print:border-gray-600"></div>
             </div>
 
             <div>
-              <h4 className="text-sm font-semibold text-gray-700">2º lugar</h4>
-              <div className="border-b-2 border-gray-300 w-[200px] h-7"></div>
+              <h4 className="text-xs font-semibold text-gray-700">2º lugar</h4>
+              <div className="border-b-2 border-gray-300 w-[180px] h-5 print:border-gray-600"></div>
             </div>
 
             <div>
-              <h4 className="text-sm font-semibold text-gray-700">3º lugar</h4>
-              <div className="border-b-2 border-gray-300 w-[200px] h-7"></div>
+              <h4 className="text-xs font-semibold text-gray-700">3º lugar</h4>
+              <div className="border-b-2 border-gray-300 w-[180px] h-5 print:border-gray-600"></div>
             </div>
-          </div>
-        </div>
 
-        <div className="absolute bottom-0 left-0 bg-white p-4 shadow-lg rounded-lg m-4">
-          <div className="space-y-3">
             <div>
-              <h4 className="text-sm font-semibold text-gray-700">Koto:</h4>
-              <div className="border-b-2 border-gray-300 w-[200px] h-7"></div>
+              <h4 className="text-xs font-semibold text-gray-700">3º lugar</h4>
+              <div className="border-b-2 border-gray-300 w-[180px] h-5 print:border-gray-600"></div>
+            </div>
+            <div>
+              <h4 className="text-xs font-semibold text-gray-700 ">Koto:</h4>
+              <div className="border-b-2 border-gray-300 w-[180px] h-5 print:border-gray-600"></div>
             </div>
           </div>
         </div>
       </div>
-
-      <div className="text-center mt-6 pt-4 border-t border-gray-200">
-        <span className="text-gray-500 text-xs">
+      <div className="text-center mt-4 pt-2 border-t border-gray-200 ">
+        <span className="text-gray-500 text-xs print:text-[10px]">
           Desenvolvido por Breno Nascimento • Solicitar serviço para seu Dojo:
           (77) 98887-1958
         </span>
