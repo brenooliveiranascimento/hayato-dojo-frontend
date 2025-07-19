@@ -17,7 +17,7 @@ export const CustomSeed = ({ seed, breakpoint }: IRenderSeedProps) => {
         backgroundColor,
         minHeight: 30,
         textAlign: "start" as const,
-        minWidth: 300,
+        minWidth: 350,
         padding: "5px 10px",
         cursor: "default",
       };
@@ -27,13 +27,12 @@ export const CustomSeed = ({ seed, breakpoint }: IRenderSeedProps) => {
       backgroundColor,
       minHeight: 30,
       textAlign: "start" as const,
-      minWidth: 300,
+      minWidth: 350,
       padding: "5px 10px",
       cursor: "pointer",
     };
   };
 
-  // Função para formatar as informações do tooltip
   const getTooltipContent = (team: Team) => {
     if (!team || team.name === "--- Sem competidor ---" || !team.name)
       return "";
@@ -54,14 +53,14 @@ export const CustomSeed = ({ seed, breakpoint }: IRenderSeedProps) => {
     <Seed mobileBreakpoint={breakpoint} style={{ fontSize: 18 }}>
       <SeedItem>
         <div>
-          {/* Primeiro competidor */}
           <div
             data-tooltip-id={`athlete-tooltip-${seed.id}-0-${seed.teams[0]?.name}`}
             data-tooltip-content={getTooltipContent(seed.teams[0] as Team)}
             data-tooltip-place="top"
           >
             <SeedTeam style={getTeamStyle(seed.teams[0] as Team, 0)}>
-              {seed.teams[0]?.name || ""}
+              {seed.teams[0]?.name || ""}{" "}
+              {/* {seed.teams[0]?.dojo ? `(${seed.teams[0]?.dojo})` : ""} */}
             </SeedTeam>
           </div>
 
@@ -90,7 +89,8 @@ export const CustomSeed = ({ seed, breakpoint }: IRenderSeedProps) => {
             data-tooltip-place="top"
           >
             <SeedTeam style={getTeamStyle(seed.teams[1] as Team, 1)}>
-              {seed.teams[1]?.name || ""}
+              {seed.teams[1]?.name || ""}{" "}
+              {/* {seed.teams[1]?.dojo ? `(${seed.teams[1]?.dojo})` : ""} */}
             </SeedTeam>
           </div>
 
